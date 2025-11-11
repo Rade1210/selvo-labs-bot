@@ -41,11 +41,38 @@
 
 
 <script>
-    window.addEventListener('df-messenger-loaded', () => {
-      const dfMessenger = document.querySelector('df-messenger');
-      dfMessenger.renderCustomText('Hello! How can I assist you today?');
-    });
+  let messengerInitialized = false;
+  
+  function initializeMessenger() {
+    const dfMessenger = document.querySelector('df-messenger');
+    
+    if (dfMessenger && !messengerInitialized) {
+      // Wait a bit more to ensure complete initialization
+      setTimeout(() => {
+        if (dfMessenger.renderCustomText) {
+          dfMessenger.renderCustomText('Hello! How can I assist you today?');
+          messengerInitialized = true;
+          console.log('Dialogflow messenger initialized successfully');
+        }
+      }, 1000);
+    }
+  }
 
-  </script>
+  // Multiple initialization attempts
+  window.addEventListener('df-messenger-loaded', initializeMessenger);
+  document.addEventListener('DOMContentLoaded', initializeMessenger);
+  
+  // Fallback: try every 500ms for up to 5 seconds
+  let attempts = 0;
+  const fallbackInterval = setInterval(() => {
+    if (messengerInitialized || attempts > 10) {
+      clearInterval(fallbackInterval);
+      return;
+    }
+    initializeMessenger();
+    attempts++;
+  }, 500);
+</script>
+
 </body>
 </html>
