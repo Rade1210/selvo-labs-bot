@@ -10,12 +10,12 @@
 <body>
    
 <df-messenger
+  id="dfMessenger"
   location="us-central1"
   project-id="virtual-agent-training-476115"
   agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
   language-code="en"
-  max-query-length="-1"
-  intent="WELCOME">
+  max-query-length="-1">
   <df-messenger-chat-bubble
     chat-title="Selvo Labs Bot">
   </df-messenger-chat-bubble>
@@ -36,53 +36,116 @@
 </style>
 
 <script>
-  // Wait for the DF Messenger component to be fully loaded
-  document.addEventListener('DOMContentLoaded', function() {
+// Method 1: Using DF Messenger events
+document.addEventListener('DOMContentLoaded', function() {
     const dfMessenger = document.querySelector('df-messenger');
     
-    // Add event listener for when the chat bubble is clicked
+    // Listen for when DF Messenger is ready
     dfMessenger.addEventListener('df-messenger-loaded', function() {
-      console.log('DF Messenger loaded');
-      
-      // Get the chat bubble element
-      const chatBubble = document.querySelector('df-messenger-chat-bubble');
-      
-      if (chatBubble) {
-        // Use MutationObserver to detect when chat opens
-        const observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'opened') {
-              const isOpen = chatBubble.getAttribute('opened');
-              
-              if (isOpen === 'true') {
-                console.log('Chat opened - welcome message should trigger automatically');
-                // The welcome intent will automatically trigger due to intent="WELCOME" attribute
-              }
-            }
-          });
-        });
+        console.log('DF Messenger loaded');
         
-        // Start observing the chat bubble for attribute changes
-        observer.observe(chatBubble, {
-          attributes: true,
-          attributeFilter: ['opened']
-        });
-      }
+        // Get the internal chat element
+        const chat = dfMessenger.shadowRoot.querySelector('df-messenger-chat');
+        
+        if (chat) {
+            // Observe when chat becomes visible/opened
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes') {
+                        const isOpen = chat.hasAttribute('opened');
+                        if (isOpen) {
+                            console.log('Chat opened!');
+                            // Trigger welcome message
+                            triggerWelcomeMessage();
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(chat, {
+                attributes: true,
+                attributeFilter: ['opened']
+            });
+        }
     });
-  });
+});
 
-  // Alternative method: Directly trigger welcome on any user interaction
-  document.addEventListener('click', function(event) {
-    // Check if the click is on or near the chat widget
+// Method 2: Simpler approach - trigger welcome on first interaction
+let welcomeSent = false;
+
+document.addEventListener('click', function(event) {
     const dfMessenger = document.querySelector('df-messenger');
-    const chatBubble = document.querySelector('df-messenger-chat-bubble');
     
-    if (dfMessenger && chatBubble && 
-        (dfMessenger.contains(event.target) || chatBubble.contains(event.target))) {
-      console.log('Chat widget interacted with');
-      // The intent="WELCOME" attribute will handle the automatic welcome message
+    if (dfMessenger && dfMessenger.contains(event.target) && !welcomeSent) {
+        setTimeout(() => {
+            triggerWelcomeMessage();
+            welcomeSent = true;
+        }, 1000);
     }
-  });
+});
+
+// Method 3: Direct API call to trigger welcome intent
+function triggerWelcomeMessage() {
+    const dfMessenger = document.querySelector('df-messenger');
+    
+    if (dfMessenger && dfMessenger.shadowRoot) {
+        // Access the internal chat component
+        const chat = dfMessenger.shadowRoot.querySelector('df-messenger-chat');
+        
+        if (chat) {
+            // Use the internal method to send a welcome event
+            try {
+                // Method 3a: Try to use Dialogflow's REST API directly
+                sendWelcomeViaAPI();
+            } catch (error) {
+                console.log('Error triggering welcome:', error);
+                // Method 3b: Fallback - simulate user sending "hi"
+                simulateUserMessage();
+            }
+        }
+    }
+}
+
+// Direct API call method
+function sendWelcomeViaAPI() {
+    // You'll need to use the Dialogflow Sessions API
+    // This requires setting up CORS and authentication
+    console.log('This method requires backend setup');
+}
+
+// Fallback: Simulate user sending a message
+function simulateUserMessage() {
+    const dfMessenger = document.querySelector('df-messenger');
+    
+    if (dfMessenger && dfMessenger.shadowRoot) {
+        // Find the input field and send button
+        const input = dfMessenger.shadowRoot.querySelector('input');
+        const sendButton = dfMessenger.shadowRoot.querySelector('button[aria-label="Send"]');
+        
+        if (input && sendButton) {
+            input.value = 'hi';
+            
+            // Create and dispatch events to simulate user interaction
+            const inputEvent = new Event('input', { bubbles: true });
+            input.dispatchEvent(inputEvent);
+            
+            setTimeout(() => {
+                sendButton.click();
+            }, 100);
+        }
+    }
+}
+
+// Method 4: Most reliable - Use Dialogflow Messenger's built-in features
+// Add this attribute to automatically show first message
+setTimeout(() => {
+    const dfMessenger = document.querySelector('df-messenger');
+    if (dfMessenger) {
+        // This will make the chat start with a welcome message
+        dfMessenger.setAttribute('intent', 'WELCOME');
+    }
+}, 2000);
+
 </script>
 
 </body>
