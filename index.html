@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-     <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
-<script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+    <title>Selvo Labs Chat</title>
+    <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+    <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 </head>
 <body>
    
@@ -14,11 +14,13 @@
   project-id="virtual-agent-training-476115"
   agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
   language-code="en"
-  max-query-length="-1">
+  max-query-length="-1"
+  intent="WELCOME">
   <df-messenger-chat-bubble
     chat-title="Selvo Labs Bot">
   </df-messenger-chat-bubble>
 </df-messenger>
+
 <style>
   df-messenger {
     z-index: 999;
@@ -32,5 +34,56 @@
     right: 16px;
   }
 </style>
+
+<script>
+  // Wait for the DF Messenger component to be fully loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const dfMessenger = document.querySelector('df-messenger');
+    
+    // Add event listener for when the chat bubble is clicked
+    dfMessenger.addEventListener('df-messenger-loaded', function() {
+      console.log('DF Messenger loaded');
+      
+      // Get the chat bubble element
+      const chatBubble = document.querySelector('df-messenger-chat-bubble');
+      
+      if (chatBubble) {
+        // Use MutationObserver to detect when chat opens
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'opened') {
+              const isOpen = chatBubble.getAttribute('opened');
+              
+              if (isOpen === 'true') {
+                console.log('Chat opened - welcome message should trigger automatically');
+                // The welcome intent will automatically trigger due to intent="WELCOME" attribute
+              }
+            }
+          });
+        });
+        
+        // Start observing the chat bubble for attribute changes
+        observer.observe(chatBubble, {
+          attributes: true,
+          attributeFilter: ['opened']
+        });
+      }
+    });
+  });
+
+  // Alternative method: Directly trigger welcome on any user interaction
+  document.addEventListener('click', function(event) {
+    // Check if the click is on or near the chat widget
+    const dfMessenger = document.querySelector('df-messenger');
+    const chatBubble = document.querySelector('df-messenger-chat-bubble');
+    
+    if (dfMessenger && chatBubble && 
+        (dfMessenger.contains(event.target) || chatBubble.contains(event.target))) {
+      console.log('Chat widget interacted with');
+      // The intent="WELCOME" attribute will handle the automatic welcome message
+    }
+  });
+</script>
+
 </body>
 </html>
