@@ -41,9 +41,14 @@
 
 
 <script>
-const dfMessenger = document.querySelector('df-messenger');
-dfMessenger.sendQuery('main menu');
+// Check if this has already run in the current session
+if (!sessionStorage.getItem('dfMessengerInitialized')) {
+    const dfMessenger = document.querySelector('df-messenger');
+    if (dfMessenger) {
+        dfMessenger.sendQuery('main menu');
+        sessionStorage.setItem('dfMessengerInitialized', 'true');
+    }
+}
 </script>
-
 </body>
 </html>
