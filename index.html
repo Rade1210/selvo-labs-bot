@@ -9,6 +9,15 @@
 </head>
 <body>
    
+
+  <script>
+    window.addEventListener('df-messenger-loaded', () => {
+      const dfMessenger = document.querySelector('df-messenger');
+      dfMessenger.renderCustomText('Hello! How can I assist you today?');
+    });
+
+  </script>
+  
 <df-messenger
   location="us-central1"
   project-id="virtual-agent-training-476115"
@@ -19,6 +28,7 @@
     chat-title="Selvo Labs Bot">
   </df-messenger-chat-bubble>
 </df-messenger>
+
 
 <style>
   df-messenger {
