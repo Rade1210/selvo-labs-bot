@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
     <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 </head>
+
+  <script>
+    window.addEventListener('df-messenger-loaded', () => {
+      const dfMessenger = document.querySelector('df-messenger');
+      dfMessenger.renderCustomText('Hello! How can I asssdfsdfsist you today?');
+    });
+
+  </script>
+
+
 <body>
 
 <df-messenger
@@ -35,13 +45,7 @@
   }
 </style>
 
-  <script>
-    window.addEventListener('df-messenger-loaded', () => {
-      const dfMessenger = document.querySelector('df-messenger');
-      dfMessenger.renderCustomText('Hello! How can I asssdfsdfsist you today?');
-    });
 
-  </script>
 
 </body>
 </html>
