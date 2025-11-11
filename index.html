@@ -41,24 +41,46 @@
 
 
 <script>
-  let messageDisplayed = false;
-
-  function displayWelcomeMessage() {
-    if (messageDisplayed) return;
-    
-    const dfMessenger = document.querySelector('df-messenger');
-    if (dfMessenger && dfMessenger.renderCustomText) {
-      dfMessenger.renderCustomText('Hello! How can I assist you today?');
-      messageDisplayed = true;
-      console.log('Welcome message displayed');
-    }
-  }
-
-  // Use {once: true} to ensure event listeners only fire once
-  window.addEventListener('df-messenger-loaded', displayWelcomeMessage, { once: true });
+  const dfMessenger = document.querySelector('df-messenger');
+if (dfMessenger && dfMessenger.renderCustomText) {
+  dfMessenger.renderCustomText('Hello! How can I assist you today?');
   
-  // Optional: Add DOMContentLoaded as backup, but with prevention
-  document.addEventListener('DOMContentLoaded', displayWelcomeMessage);
+  // Create and add the consultation button
+  const button = document.createElement('button');
+  button.textContent = 'Schedule Free Consultation';
+  button.style.cssText = `
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  `;
+  
+  // Add hover effect
+  button.addEventListener('mouseenter', () => {
+    button.style.backgroundColor = '#3367d6';
+  });
+  button.addEventListener('mouseleave', () => {
+    button.style.backgroundColor = '#4285f4';
+  });
+  
+  // Add click handler (you can customize this)
+  button.addEventListener('click', () => {
+    // Add your consultation scheduling logic here
+    console.log('Schedule consultation clicked');
+    // Example: window.open('https://calendly.com/your-link', '_blank');
+  });
+  
+  // Add the button to the messenger
+  dfMessenger.shadowRoot.querySelector('#widget').appendChild(button);
+  
+  messageDisplayed = true;
+  console.log('Welcome message displayed with consultation button');
+}
 </script>
 
 </body>
