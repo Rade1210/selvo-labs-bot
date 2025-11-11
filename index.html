@@ -41,37 +41,24 @@
 
 
 <script>
-  let messengerInitialized = false;
-  
-  function initializeMessenger() {
-    const dfMessenger = document.querySelector('df-messenger');
+  let messageDisplayed = false;
+
+  function displayWelcomeMessage() {
+    if (messageDisplayed) return;
     
-    if (dfMessenger && !messengerInitialized) {
-      // Wait a bit more to ensure complete initialization
-      setTimeout(() => {
-        if (dfMessenger.renderCustomText) {
-          dfMessenger.renderCustomText('Hello! How can I assist you today?');
-          messengerInitialized = true;
-          console.log('Dialogflow messenger initialized successfully');
-        }
-      }, 1000);
+    const dfMessenger = document.querySelector('df-messenger');
+    if (dfMessenger && dfMessenger.renderCustomText) {
+      dfMessenger.renderCustomText('Hello! How can I assist you today?');
+      messageDisplayed = true;
+      console.log('Welcome message displayed');
     }
   }
 
-  // Multiple initialization attempts
-  window.addEventListener('df-messenger-loaded', initializeMessenger);
-  document.addEventListener('DOMContentLoaded', initializeMessenger);
+  // Use {once: true} to ensure event listeners only fire once
+  window.addEventListener('df-messenger-loaded', displayWelcomeMessage, { once: true });
   
-  // Fallback: try every 500ms for up to 5 seconds
-  let attempts = 0;
-  const fallbackInterval = setInterval(() => {
-    if (messengerInitialized || attempts > 10) {
-      clearInterval(fallbackInterval);
-      return;
-    }
-    initializeMessenger();
-    attempts++;
-  }, 500);
+  // Optional: Add DOMContentLoaded as backup, but with prevention
+  document.addEventListener('DOMContentLoaded', displayWelcomeMessage);
 </script>
 
 </body>
