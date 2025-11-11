@@ -41,8 +41,25 @@
 
 
 <script>
- const dfMessenger = document.querySelector('df-messenger');
- dfMessenger.sendQuery('main menu');
+  let messageDisplayed = false;
+
+  function displayWelcomeMessage() {
+    if (messageDisplayed) return;
+    
+    const dfMessenger = document.querySelector('df-messenger');
+    if (dfMessenger && dfMessenger.renderCustomText) {
+       const dfMessenger = document.querySelector('df-messenger');
+       dfMessenger.sendQuery('main menu');
+      messageDisplayed = true;
+      console.log('Welcome message displayed');
+    }
+  }
+
+  // Use {once: true} to ensure event listeners only fire once
+  window.addEventListener('df-messenger-loaded', displayWelcomeMessage, { once: true });
+  
+  // Optional: Add DOMContentLoaded as backup, but with prevention
+  document.addEventListener('DOMContentLoaded', displayWelcomeMessage);
 </script>
 
 </body>
