@@ -10,7 +10,6 @@
 <body>
    
 <df-messenger
-  id="dfMessenger"
   location="us-central1"
   project-id="virtual-agent-training-476115"
   agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
@@ -34,81 +33,6 @@
     right: 16px;
   }
 </style>
-
-<script>
-// Simple and reliable approach
-document.addEventListener('DOMContentLoaded', function() {
-    let welcomeTriggered = false;
-    
-    // Method 1: Use a click event listener on the document
-    document.addEventListener('click', function(event) {
-        const dfMessenger = document.querySelector('df-messenger');
-        
-        // Check if the click is on or near the chat widget
-        if (dfMessenger && dfMessenger.contains(event.target) && !welcomeTriggered) {
-            // Small delay to ensure the chat is fully open
-            setTimeout(() => {
-                triggerWelcomeViaQuery();
-                welcomeTriggered = true;
-            }, 1000);
-        }
-    });
-    
-    // Method 2: Alternative approach using periodic check
-    let checkCount = 0;
-    const maxChecks = 10;
-    const checkInterval = setInterval(() => {
-        const dfMessenger = document.querySelector('df-messenger');
-        if (dfMessenger) {
-            // Check if chat appears to be open by looking for visible elements
-            const chatBubble = dfMessenger.querySelector('df-messenger-chat-bubble');
-            if (chatBubble && !welcomeTriggered) {
-                // More gentle approach - wait for user to actually open chat
-                console.log('Chat widget ready');
-                clearInterval(checkInterval);
-            }
-        }
-        
-        checkCount++;
-        if (checkCount >= maxChecks) {
-            clearInterval(checkInterval);
-        }
-    }, 500);
-});
-
-// Safe method to trigger welcome - by setting a session parameter
-function triggerWelcomeViaQuery() {
-    const dfMessenger = document.querySelector('df-messenger');
-    if (!dfMessenger) return;
-    
-    try {
-        // Instead of manipulating internal elements, let's use a safer approach
-        // We'll rely on the Dialogflow agent configuration
-        
-        console.log('Welcome message should appear automatically');
-        
-        // The welcome intent should trigger automatically when chat opens
-        // Make sure your Dialogflow agent has a proper Default Welcome Intent
-        
-    } catch (error) {
-        console.log('Safe approach:', error);
-    }
-}
-
-// Absolutely safe approach - just ensure Dialogflow is configured correctly
-function ensureDialogflowConfiguration() {
-    // Verify these points in your Dialogflow console:
-    console.log('Please verify in Dialogflow Console:');
-    console.log('1. Go to Intents -> Default Welcome Intent');
-    console.log('2. Ensure there are responses set (e.g., "Hi, how can I help you?")');
-    console.log('3. Make sure the intent is enabled');
-    console.log('4. Check that your agent is properly trained and deployed');
-}
-
-// Call this to remind about configuration
-ensureDialogflowConfiguration();
-
-</script>
 
 </body>
 </html>
