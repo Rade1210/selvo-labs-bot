@@ -37,48 +37,68 @@
     bottom: 16px;
     right: 16px;
   }
-  /* Popup container positioned near the chat bubble */
-  #welcome-popup {
+    #welcome-popup {
     position: fixed;
-    bottom: 90px;  /* slightly above the chat icon */
-    right: 20px;   /* aligned to the left of the chat bubble */
-    max-width: 250px;
-    background: #fff;
-    padding: 12px 16px;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    bottom: 90px;
+    right: 20px;
+    max-width: 260px;
+    background: linear-gradient(135deg, #f3f6fc, #e6f0ff);
+    padding: 16px 18px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
     font-family: 'Google Sans', Arial, sans-serif;
     font-size: 14px;
-    color: #333;
+    color: #1c1c1c;
     z-index: 1000;
     opacity: 1;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    line-height: 1.4;
   }
 
-  /* Close button */
+  /* Smooth fade and slight scale on show */
+  #welcome-popup.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Close button with modern styling */
   #popup-close {
     position: absolute;
-    top: 4px;
-    right: 6px;
-    background: transparent;
+    top: 6px;
+    right: 8px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
     border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
     font-size: 16px;
+    color: #fff;
     line-height: 1;
     cursor: pointer;
-    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
   }
 
   #popup-close:hover {
-    color: #333;
+    background: linear-gradient(135deg, #ff8787, #ff6b6b);
   }
 
-  /* Optional responsive tweak for mobile */
+  /* Highlight strong text */
+  #welcome-popup strong {
+    color: #0a3d91;
+    font-size: 15px;
+  }
+
+  /* Optional responsive adjustments for mobile */
   @media (max-width: 480px) {
     #welcome-popup {
       bottom: 100px;
       right: 16px;
-      max-width: 200px;
+      max-width: 220px;
       font-size: 13px;
+      padding: 14px 16px;
     }
   }
 </style>
