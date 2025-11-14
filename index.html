@@ -13,20 +13,20 @@
         df-messenger {
             z-index: 999;
             position: fixed;
+            bottom: 16px;
+            right: 16px;
+
             --df-messenger-font-color: #000;
             --df-messenger-font-family: Google Sans;
             --df-messenger-chat-background: #f3f6fc;
             --df-messenger-message-user-background: #d3e3fd;
             --df-messenger-message-bot-background: #fff;
-            bottom: 16px;
-            right: 16px;
         }
 
-        /* Popup bubble */
         #popup {
             position: fixed;
-            bottom: 90px;  /* positions above chat bubble */
-            right: 95px;   /* positions to the left of chat bubble */
+            bottom: 90px;  
+            right: 95px;   
             background: white;
             padding: 12px 18px;
             border-radius: 12px;
@@ -51,10 +51,10 @@
 
 <body>
 
-<!-- Popup text -->
+<!-- Popup -->
 <div id="popup">Want a free consulting session, start from here!</div>
 
-<!-- Dialogflow Web Messenger -->
+<!-- Dialogflow widget -->
 <df-messenger
     id="df-chat"
     location="us-central1"
@@ -65,23 +65,35 @@
     <df-messenger-chat-bubble chat-title="Selvo Labs Bot"></df-messenger-chat-bubble>
 </df-messenger>
 
+
 <script>
-/* --- Show the popup when page loads --- */
+/* --- Show popup on page load --- */
 window.addEventListener("load", () => {
-    const popup = document.getElementById("popup");
     setTimeout(() => {
-        popup.classList.add("show");
+        document.getElementById("popup").classList.add("show");
     }, 700);
 });
 
-/* --- After the chat is opened by the user, send "main menu" query --- */
+/* --- Trigger "main menu" when user opens chatbot --- */
 window.addEventListener("dfMessengerLoaded", () => {
     const df = document.querySelector("#df-chat");
 
-    // Fires when the user clicks the chat bubble and opens the window
-    df.addEventListener("dfMessengerOpened", () => {
-        df.sendQuery("main menu");
+    // MutationObserver reliably catches when the widget opens
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+            if (m.attributeName === "opened") {
+                const isOpen = df.hasAttribute("opened");
+
+                if (isOpen) {
+                    // Fire your auto reply
+                    df.sendQuery("main menu");
+                }
+            }
+        });
     });
+
+    // Watch for attribute changes (including "opened")
+    observer.observe(df, { attributes: true });
 });
 </script>
 
