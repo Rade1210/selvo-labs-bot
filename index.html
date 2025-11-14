@@ -1,32 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Selvo Labs Chat</title>
-<link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
-<script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selvo Labs Chat</title>
+    <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+    <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+
+  </head>
 
 <body>
 
-<!-- Dialogflow CX Web Messenger -->
+
+
 <df-messenger
-  id="df-chat"
   location="us-central1"
   project-id="virtual-agent-training-476115"
   agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
   language-code="en"
   max-query-length="-1">
-  <df-messenger-chat-bubble chat-title="Selvo Labs Bot"></df-messenger-chat-bubble>
+  <df-messenger-chat-bubble
+    chat-title="Selvo Labs Bot">
+  </df-messenger-chat-bubble>
 </df-messenger>
 
-<!-- Welcome Popup -->
-<div id="welcome-popup">
-  <button id="popup-close">&times;</button>
-  <strong>Welcome to Selvo Labs!</strong><br>
-  Want a free consulting session? Start from here!
-</div>
 
 <style>
   df-messenger {
@@ -40,9 +37,7 @@
     bottom: 16px;
     right: 16px;
   }
-
-  /* Popup styles */
-  #welcome-popup {
+    #welcome-popup {
     position: fixed;
     bottom: 90px;
     right: 20px;
@@ -60,11 +55,13 @@
     line-height: 1.4;
   }
 
+  /* Smooth fade and slight scale on show */
   #welcome-popup.show {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 
+  /* Close button with modern styling */
   #popup-close {
     position: absolute;
     top: 6px;
@@ -88,11 +85,13 @@
     background: linear-gradient(135deg, #ff8787, #ff6b6b);
   }
 
+  /* Highlight strong text */
   #welcome-popup strong {
     color: #0a3d91;
     font-size: 15px;
   }
 
+  /* Optional responsive adjustments for mobile */
   @media (max-width: 480px) {
     #welcome-popup {
       bottom: 100px;
@@ -104,46 +103,25 @@
   }
 </style>
 
+
 <script>
-  // Show popup on page load
-  window.addEventListener("load", () => {
-    const popup = document.getElementById("welcome-popup");
-    setTimeout(() => popup.classList.add("show"), 600);
-  });
-
-  // Close popup when user clicks close button
-  document.getElementById("popup-close").addEventListener("click", () => {
-    document.getElementById("welcome-popup").classList.remove("show");
-  });
-
-  // Automatically hide popup when user opens the chatbot
-  window.addEventListener("dfMessengerLoaded", () => {
-    const df = document.querySelector("#df-chat");
-    const popup = document.getElementById("welcome-popup");
-
-    // Observe attribute changes (like "opened") in df-messenger
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "opened") {
-          if (df.hasAttribute("opened")) {
-            popup.classList.remove("show");
-          }
-        }
-      });
-    });
-
-    observer.observe(df, { attributes: true });
-  });
-
-  // Ensure "main menu" query only runs once per session
-  if (!sessionStorage.getItem('dfMessengerInitialized')) {
+// Check if this has already run in the current session
+if (!sessionStorage.getItem('dfMessengerInitialized')) {
     const dfMessenger = document.querySelector('df-messenger');
     if (dfMessenger) {
         dfMessenger.sendQuery('main menu');
         sessionStorage.setItem('dfMessengerInitialized', 'true');
     }
-  }
+}
 </script>
+
+
+   <div id="welcome-popup">
+        <button id="popup-close">&times;</button>
+        <strong>Welcome to Selvo Labs!</strong><br>
+        Want a free consulting session? Start from here!
+    </div>
+
 
 </body>
 </html>
