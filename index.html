@@ -39,6 +39,7 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
             z-index: 1000;
             white-space: nowrap;
+            border-left: 4px solid #4285f4;
         }
 
         #popup.show {
@@ -46,13 +47,37 @@
             transform: translateY(0);
             pointer-events: auto;
         }
+
+        #popup.hide {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+
+        #popup-close {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+
+        #popup-close:hover {
+            color: #000;
+        }
     </style>
 </head>
 
 <body>
 
 <!-- Popup -->
-<div id="popup">Want a free consulting session, start from here!</div>
+<div id="popup">
+    <button id="popup-close">&times;</button>
+    Welcome to Selvo Labs! Want a free consulting session? Start from here!
+</div>
 
 <!-- Dialogflow widget -->
 <df-messenger
@@ -65,13 +90,18 @@
     <df-messenger-chat-bubble chat-title="Selvo Labs Bot"></df-messenger-chat-bubble>
 </df-messenger>
 
-
 <script>
 /* --- Show popup on page load --- */
 window.addEventListener("load", () => {
     setTimeout(() => {
         document.getElementById("popup").classList.add("show");
     }, 700);
+});
+
+/* --- Close popup when close button is clicked --- */
+document.getElementById("popup-close").addEventListener("click", () => {
+    document.getElementById("popup").classList.remove("show");
+    document.getElementById("popup").classList.add("hide");
 });
 
 /* --- Trigger "main menu" when user opens chatbot --- */
@@ -85,6 +115,10 @@ window.addEventListener("dfMessengerLoaded", () => {
                 const isOpen = df.hasAttribute("opened");
 
                 if (isOpen) {
+                    // Hide the popup when chat opens
+                    document.getElementById("popup").classList.remove("show");
+                    document.getElementById("popup").classList.add("hide");
+                    
                     // Fire your auto reply
                     df.sendQuery("main menu");
                 }
