@@ -6,122 +6,343 @@
     <title>Selvo Labs Chat</title>
     <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
     <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
-
-  </head>
-
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #5f6368;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .content h2 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .content p {
+            color: #5f6368;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 200px;
+            margin: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .feature h3 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            font-size: 0.95rem;
+        }
+        
+        .cta-button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .cta-button:hover {
+            background: #0d62d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+        
+        df-messenger {
+            z-index: 999;
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            --df-messenger-font-color: #000;
+            --df-messenger-font-family: Google Sans;
+            --df-messenger-chat-background: #f3f6fc;
+            --df-messenger-message-user-background: #d3e3fd;
+            --df-messenger-message-bot-background: #fff;
+        }
+        
+        #welcome-popup {
+            position: fixed;
+            bottom: 90px;
+            right: 95px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            font-family: Google Sans, sans-serif;
+            font-size: 15px;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 1000;
+            max-width: 280px;
+            border-left: 4px solid #1a73e8;
+        }
+        
+        #welcome-popup.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        #welcome-popup.hide {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+        
+        #popup-close {
+            position: absolute;
+            top: 6px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #5f6368;
+            line-height: 1;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #popup-close:hover {
+            color: #000;
+            background: #f1f3f4;
+            border-radius: 50%;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #5f6368;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .features {
+                flex-direction: column;
+            }
+            
+            #welcome-popup {
+                right: 20px;
+                max-width: calc(100vw - 40px);
+            }
+        }
+    </style>
+</head>
 <body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Selvo Labs</div>
+            <div class="tagline">AI-Powered Solutions for Your Business</div>
+        </div>
+        
+        <div class="content">
+            <h2>Welcome to Our AI Assistant</h2>
+            <p>Our virtual assistant is here to help you with any questions about our services, products, or to schedule a free consultation session.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>24/7 Support</h3>
+                    <p>Get answers to your questions anytime, day or night.</p>
+                </div>
+                <div class="feature">
+                    <h3>Expert Guidance</h3>
+                    <p>Receive personalized recommendations from our AI.</p>
+                </div>
+                <div class="feature">
+                    <h3>Quick Solutions</h3>
+                    <p>Find what you need faster with intelligent assistance.</p>
+                </div>
+            </div>
+            
+            <p>Click the chat button in the bottom right to get started!</p>
+            <button class="cta-button" id="open-chat-btn">Open Chat Assistant</button>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2023 Selvo Labs. All rights reserved.</p>
+        </div>
+    </div>
 
-
-
-<df-messenger
-  location="us-central1"
-  project-id="virtual-agent-training-476115"
-  agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
-  language-code="en"
-  max-query-length="-1">
-  <df-messenger-chat-bubble
-    chat-title="Selvo Labs Bot">
-  </df-messenger-chat-bubble>
-</df-messenger>
-
-
-<style>
-  df-messenger {
-    z-index: 999;
-    position: fixed;
-    --df-messenger-font-color: #000;
-    --df-messenger-font-family: Google Sans;
-    --df-messenger-chat-background: #f3f6fc;
-    --df-messenger-message-user-background: #d3e3fd;
-    --df-messenger-message-bot-background: #fff;
-    bottom: 16px;
-    right: 16px;
-  }
-    #welcome-popup {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    max-width: 260px;
-    background: linear-gradient(135deg, #f3f6fc, #e6f0ff);
-    padding: 16px 18px;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    font-family: 'Google Sans', Arial, sans-serif;
-    font-size: 14px;
-    color: #1c1c1c;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    line-height: 1.4;
-  }
-
-  /* Smooth fade and slight scale on show */
-  #welcome-popup.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  /* Close button with modern styling */
-  #popup-close {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    background: linear-gradient(135deg, #ff6b6b, #ff8787);
-    border: none;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 16px;
-    color: #fff;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-  }
-
-  #popup-close:hover {
-    background: linear-gradient(135deg, #ff8787, #ff6b6b);
-  }
-
-  /* Highlight strong text */
-  #welcome-popup strong {
-    color: #0a3d91;
-    font-size: 15px;
-  }
-
-  /* Optional responsive adjustments for mobile */
-  @media (max-width: 480px) {
-    #welcome-popup {
-      bottom: 100px;
-      right: 16px;
-      max-width: 220px;
-      font-size: 13px;
-      padding: 14px 16px;
-    }
-  }
-</style>
-
-
-<script>
-// Check if this has already run in the current session
-if (!sessionStorage.getItem('dfMessengerInitialized')) {
-    const dfMessenger = document.querySelector('df-messenger');
-    if (dfMessenger) {
-        dfMessenger.sendQuery('main menu');
-        sessionStorage.setItem('dfMessengerInitialized', 'true');
-    }
-}
-</script>
-
-
-   <div id="welcome-popup">
+    <!-- Welcome Popup -->
+    <div id="welcome-popup">
         <button id="popup-close">&times;</button>
         <strong>Welcome to Selvo Labs!</strong><br>
         Want a free consulting session? Start from here!
     </div>
 
+    <!-- Dialogflow widget -->
+    <df-messenger
+        id="df-chat"
+        location="us-central1"
+        project-id="virtual-agent-training-476115"
+        agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
+        language-code="en"
+        max-query-length="-1">
+        <df-messenger-chat-bubble chat-title="Selvo Labs Bot"></df-messenger-chat-bubble>
+    </df-messenger>
 
+    <script>
+        // DOM Ready function
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const welcomePopup = document.getElementById('welcome-popup');
+            const popupClose = document.getElementById('popup-close');
+            const openChatBtn = document.getElementById('open-chat-btn');
+            const dfChat = document.getElementById('df-chat');
+            
+            // Function to close the popup
+            function closePopup() {
+                if (welcomePopup) {
+                    welcomePopup.classList.remove('show');
+                    welcomePopup.classList.add('hide');
+                }
+            }
+            
+            // Show welcome popup after page load
+            setTimeout(() => {
+                if (welcomePopup) {
+                    welcomePopup.classList.add('show');
+                }
+            }, 1000);
+            
+            // Close popup when close button is clicked
+            if (popupClose) {
+                popupClose.addEventListener('click', closePopup);
+            }
+            
+            // Open chat when CTA button is clicked
+            if (openChatBtn) {
+                openChatBtn.addEventListener('click', () => {
+                    if (dfChat) {
+                        // Programmatically open the chat widget
+                        dfChat.setAttribute('opened', '');
+                        
+                        // Close the popup
+                        closePopup();
+                    }
+                });
+            }
+            
+            // Auto-close popup after 10 seconds
+            setTimeout(() => {
+                if (welcomePopup && welcomePopup.classList.contains('show')) {
+                    closePopup();
+                }
+            }, 10000);
+        });
+        
+        // Dialogflow integration
+        window.addEventListener('dfMessengerLoaded', () => {
+            const df = document.querySelector('#df-chat');
+            
+            if (!df) {
+                console.error('Dialogflow messenger element not found');
+                return;
+            }
+            
+            // MutationObserver to detect when the widget opens
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'opened') {
+                        const isOpen = df.hasAttribute('opened');
+                        
+                        if (isOpen) {
+                            // Hide the welcome popup
+                            const welcomePopup = document.getElementById('welcome-popup');
+                            if (welcomePopup) {
+                                welcomePopup.classList.remove('show');
+                                welcomePopup.classList.add('hide');
+                            }
+                            
+                            // Send the main menu query after a short delay
+                            setTimeout(() => {
+                                try {
+                                    df.sendQuery("main menu");
+                                } catch (error) {
+                                    console.error('Error sending query to Dialogflow:', error);
+                                }
+                            }, 500);
+                        }
+                    }
+                });
+            });
+            
+            // Start observing the Dialogflow element
+            observer.observe(df, { attributes: true });
+        });
+        
+        // Error handling for Dialogflow loading
+        window.addEventListener('error', (event) => {
+            console.error('Script error:', event.error);
+        });
+    </script>
 </body>
 </html>
