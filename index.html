@@ -41,6 +41,13 @@
 
 
 <script>
+
+ window.addEventListener('dfMessengerLoaded', function (event) {
+    const dfMessenger = document.querySelector('df-messenger');
+    const openText = ('Welcome to our site! How can I help you today?'); // <-- Customize this text
+    dfMessenger.renderCustomText(openText);
+  });
+
 // Check if this has already run in the current session
 if (!sessionStorage.getItem('dfMessengerInitialized')) {
     const dfMessenger = document.querySelector('df-messenger');
