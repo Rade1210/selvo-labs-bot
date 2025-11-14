@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Selvo Labs Chat</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selvo Labs Chat</title>
 
-  <!-- Dialogflow CX Web Messenger -->
-  <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
-  <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+<!-- Dialogflow CX Web Messenger -->
+<link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+<script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 
-  <style>
-    df-messenger {
-      z-index: 999;
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      --df-messenger-font-color: #000;
-      --df-messenger-chat-background: #f3f6fc;
-      --df-messenger-message-user-background: #d3e3fd;
-      --df-messenger-message-bot-background: #fff;
-    }
+<style>
+  df-messenger {
+    z-index: 999;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    --df-messenger-font-color: #000;
+    --df-messenger-chat-background: #f3f6fc;
+    --df-messenger-message-user-background: #d3e3fd;
+    --df-messenger-message-bot-background: #fff;
+  }
 
-    #popup {
-      position: fixed;
-      bottom: 90px;
-      right: 95px;
-      background: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-      font-family: Google Sans, sans-serif;
-      font-size: 15px;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      z-index: 1000;
-      white-space: nowrap;
-    }
+  #popup {
+    position: fixed;
+    bottom: 90px;
+    right: 95px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-family: Google Sans, sans-serif;
+    font-size: 15px;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    white-space: nowrap;
+  }
 
-    #popup.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-  </style>
+  #popup.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+</style>
 </head>
 
 <body>
@@ -52,44 +52,17 @@
 <div id="popup">Want a free consulting session, start from here!</div>
 
 <df-messenger
-    id="df-chat"
-    location="us-central1"
-    project-id="virtual-agent-training-476115"
-    agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
-    language-code="en"
-    max-query-length="-1">
+  id="df-chat"
+  location="us-central1"
+  project-id="virtual-agent-training-476115"
+  agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
+  language-code="en"
+  max-query-length="-1">
   <df-messenger-chat-bubble chat-title="Selvo Labs Bot"></df-messenger-chat-bubble>
 </df-messenger>
 
 <script>
-  // 1) Show popup on page load
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      document.getElementById("popup").classList.add("show");
-    }, 600);
-  });
-
-  // 2) Trigger CX Event when user opens chat
-  window.addEventListener("dfMessengerLoaded", () => {
-    const df = document.querySelector("#df-chat");
-
-    // Observe attribute changes for 'opened'
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "opened") {
-          const isOpen = df.hasAttribute("opened");
-
-          if (isOpen && !sessionStorage.getItem("mainMenuSent")) {
-            df.sendEvent({ event: "OPEN_MAIN_MENU" }); // trigger CX event
-            sessionStorage.setItem("mainMenuSent", "true");
-          }
-        }
-      });
-    });
-
-    observer.observe(df, { attributes: true });
-  });
-</script>
-
-</body>
-</html>
+window.addEventListener("load", () => {
+  // Show popup on page load
+  setTimeout(() => {
+    document
