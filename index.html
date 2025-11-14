@@ -22,11 +22,11 @@
             right: 16px;
         }
 
-        /* Popup bubble */
+        /* Popup */
         #popup {
             position: fixed;
-            bottom: 90px;   /* higher than chat icon */
-            right: 95px;    /* to the left of chat icon */
+            bottom: 90px;
+            right: 95px;
             background: white;
             padding: 12px 18px;
             border-radius: 12px;
@@ -50,10 +50,8 @@
 
 <body>
 
-<!-- Popup bubble -->
 <div id="popup">Welcome! How can I help you?</div>
 
-<!-- Dialogflow Chat -->
 <df-messenger
     location="us-central1"
     project-id="virtual-agent-training-476115"
@@ -65,20 +63,22 @@
 
 <script>
 window.addEventListener("load", () => {
-    const popup = document.getElementById("popup");
 
-    // Popup always shows on refresh
+    // Show popup on every refresh
     setTimeout(() => {
-        popup.classList.add("show");
+        document.getElementById("popup").classList.add("show");
     }, 800);
 
-    // Auto-trigger a message once DF loads
+    // Auto-send message to DF when widget is ready
     window.addEventListener("dfMessengerLoaded", () => {
         const dfMessenger = document.querySelector("df-messenger");
+
         if (dfMessenger) {
-            dfMessenger.renderCustomText("main menu");
+            // Send a message that triggers an intent
+            dfMessenger.sendQuery("main menu");
         }
     });
+
 });
 </script>
 
