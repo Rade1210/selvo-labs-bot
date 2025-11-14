@@ -7,7 +7,40 @@
     <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
     <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
 
+  </head>
+
+<body>
+
+   <div id="welcome-popup">
+        <button id="popup-close">&times;</button>
+        <strong>Welcome to Selvo Labs!</strong><br>
+        Want a free consulting session? Start from here!
+    </div>
+
+<df-messenger
+  location="us-central1"
+  project-id="virtual-agent-training-476115"
+  agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
+  language-code="en"
+  max-query-length="-1">
+  <df-messenger-chat-bubble
+    chat-title="Selvo Labs Bot">
+  </df-messenger-chat-bubble>
+</df-messenger>
+
+
 <style>
+  df-messenger {
+    z-index: 999;
+    position: fixed;
+    --df-messenger-font-color: #000;
+    --df-messenger-font-family: Google Sans;
+    --df-messenger-chat-background: #f3f6fc;
+    --df-messenger-message-user-background: #d3e3fd;
+    --df-messenger-message-bot-background: #fff;
+    bottom: 16px;
+    right: 16px;
+  }
     #welcome-popup {
     position: fixed;
     bottom: 90px;   /* slightly above the chat icon */
@@ -47,42 +80,6 @@
 
   #popup-close:hover {
     color: #333;
-  }
-</style>
-
-  </head>
-
-<body>
-
-   <div id="welcome-popup">
-        <button id="popup-close">&times;</button>
-        <strong>Welcome to Selvo Labs!</strong><br>
-        Want a free consulting session? Start from here!
-    </div>
-
-<df-messenger
-  location="us-central1"
-  project-id="virtual-agent-training-476115"
-  agent-id="80f40701-01b6-4ef3-b50c-c7209d4a5c04"
-  language-code="en"
-  max-query-length="-1">
-  <df-messenger-chat-bubble
-    chat-title="Selvo Labs Bot">
-  </df-messenger-chat-bubble>
-</df-messenger>
-
-
-<style>
-  df-messenger {
-    z-index: 999;
-    position: fixed;
-    --df-messenger-font-color: #000;
-    --df-messenger-font-family: Google Sans;
-    --df-messenger-chat-background: #f3f6fc;
-    --df-messenger-message-user-background: #d3e3fd;
-    --df-messenger-message-bot-background: #fff;
-    bottom: 16px;
-    right: 16px;
   }
 </style>
 
