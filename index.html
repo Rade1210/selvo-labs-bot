@@ -250,6 +250,9 @@
     </df-messenger>
 
     <script>
+        // Track if main menu has been sent to prevent duplicates
+        let mainMenuSent = false;
+        
         // DOM Ready function
         document.addEventListener('DOMContentLoaded', function() {
             // Elements
@@ -299,49 +302,95 @@
             }, 10000);
         });
         
-        // Dialogflow integration
+        // Dialogflow integration with improved detection
         window.addEventListener('dfMessengerLoaded', () => {
-            const df = document.querySelector('#df-chat');
+            console.log('Dialogflow messenger loaded');
+            
+            const df = document.querySelector('df-messenger');
             
             if (!df) {
                 console.error('Dialogflow messenger element not found');
                 return;
             }
             
-            // MutationObserver to detect when the widget opens
+            // Function to send main menu query
+            function sendMainMenu() {
+                if (!mainMenuSent) {
+                    console.log('Sending main menu query...');
+                    try {
+                        // Use the Dialogflow messenger API to send query
+                        df.sendQuery("main menu");
+                        mainMenuSent = true;
+                        console.log('Main menu query sent successfully');
+                    } catch (error) {
+                        console.error('Error sending main menu query:', error);
+                        // Retry after a delay if failed
+                        setTimeout(sendMainMenu, 1000);
+                    }
+                }
+            }
+            
+            // Method 1: Direct click event listener on the chat bubble
+            const chatBubble = document.querySelector('df-messenger-chat-bubble');
+            if (chatBubble) {
+                chatBubble.addEventListener('click', function() {
+                    console.log('Chat bubble clicked');
+                    setTimeout(sendMainMenu, 1000);
+                });
+            }
+            
+            // Method 2: MutationObserver for attribute changes
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.attributeName === 'opened') {
                         const isOpen = df.hasAttribute('opened');
+                        console.log('Chat opened state changed:', isOpen);
                         
-                        if (isOpen) {
-                            // Hide the welcome popup
-                            const welcomePopup = document.getElementById('welcome-popup');
-                            if (welcomePopup) {
-                                welcomePopup.classList.remove('show');
-                                welcomePopup.classList.add('hide');
-                            }
-                            
-                            // Send the main menu query after a short delay
-                            setTimeout(() => {
-                                try {
-                                    df.sendQuery("main menu");
-                                } catch (error) {
-                                    console.error('Error sending query to Dialogflow:', error);
-                                }
-                            }, 500);
+                        if (isOpen && !mainMenuSent) {
+                            // Wait for chat to fully open then send main menu
+                            setTimeout(sendMainMenu, 800);
+                        }
+                        
+                        if (!isOpen) {
+                            // Reset the flag when chat is closed so it sends again on next open
+                            mainMenuSent = false;
                         }
                     }
                 });
             });
             
-            // Start observing the Dialogflow element
-            observer.observe(df, { attributes: true });
+            // Start observing
+            observer.observe(df, { 
+                attributes: true,
+                attributeFilter: ['opened']
+            });
+            
+            // Method 3: Event listener for the chat open event
+            df.addEventListener('df-toggle-chat', function(event) {
+                console.log('Chat toggle event:', event.detail.isChatOpen);
+                if (event.detail.isChatOpen && !mainMenuSent) {
+                    setTimeout(sendMainMenu, 700);
+                }
+            });
+            
+            // Method 4: Fallback - check periodically if chat is open
+            const checkChatOpen = setInterval(() => {
+                if (df.hasAttribute('opened') && !mainMenuSent) {
+                    console.log('Fallback: Chat detected as open, sending main menu');
+                    sendMainMenu();
+                    clearInterval(checkChatOpen);
+                }
+            }, 2000);
+            
+            // Stop checking after 10 seconds
+            setTimeout(() => {
+                clearInterval(checkChatOpen);
+            }, 10000);
         });
         
-        // Error handling for Dialogflow loading
+        // Global error handling
         window.addEventListener('error', (event) => {
-            console.error('Script error:', event.error);
+            console.error('Global error:', event.error);
         });
     </script>
 </body>
