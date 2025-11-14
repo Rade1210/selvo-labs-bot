@@ -11,11 +11,7 @@
 
 <body>
 
-   <div id="welcome-popup">
-        <button id="popup-close">&times;</button>
-        <strong>Welcome to Selvo Labs!</strong><br>
-        Want a free consulting session? Start from here!
-    </div>
+
 
 <df-messenger
   location="us-central1"
@@ -41,46 +37,6 @@
     bottom: 16px;
     right: 16px;
   }
-    #welcome-popup {
-    position: fixed;
-    bottom: 90px;   /* slightly above the chat icon */
-    right: 20px;    /* aligned near the chat icon */
-    max-width: 250px;
-    background: #fff;
-    padding: 12px 15px;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    font-family: 'Google Sans', Arial, sans-serif;
-    font-size: 14px;
-    color: #333;
-    z-index: 1000;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
-
-  /* Show the popup */
-  #welcome-popup.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Close button */
-  #popup-close {
-    position: absolute;
-    top: 4px;
-    right: 6px;
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    line-height: 1;
-    cursor: pointer;
-    color: #888;
-  }
-
-  #popup-close:hover {
-    color: #333;
-  }
 </style>
 
 
@@ -94,5 +50,14 @@ if (!sessionStorage.getItem('dfMessengerInitialized')) {
     }
 }
 </script>
+
+
+   <div id="welcome-popup">
+        <button id="popup-close">&times;</button>
+        <strong>Welcome to Selvo Labs!</strong><br>
+        Want a free consulting session? Start from here!
+    </div>
+
+    
 </body>
 </html>
